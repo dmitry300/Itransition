@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head th:insert="/fragments :: head"></head>
+<body>
+<header th:insert="/fragments :: navbar"></header>
+<h5>List of users</h5>
+<table>
+    <tr>
+        <td>Name</td>
+        <td>Role</td>
+        <td></td>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.getUsername()}"></td>
+        <td th:each="role : ${user.getRoles()}" th:text="${role.name()}"></td>
+        <td><a th:href="@{/user/{userId}(userId=${user.getId})}">Edit</a></td>
+    </tr>
+</table>
+<script th:insert="/fragments :: script"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head th:insert="/fragments :: head"></head>
+<body>
+<header th:insert="/fragments :: navbar"></header>
+User editor
+<form method="post" th:action="@{/user}">
+    <div><label> User Name : <input type="text" name="userName" th:value="${user.getUsername()}"/> </label></div>
+    <div th:each="role : ${roles}">
+        <label th:text="${role}"></label>
+        <input type="checkbox" th:checked="${#lists.contains(user.roles, role)}" th:name="${role}">
+    </div>
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <input type="hidden" th:name="userId" th:value="${user.getId()}"/>
+    <div><input type="submit" value="Submit"/></div>
+</form>
+<script th:insert="/fragments :: script"></script>
+</body>
+</html>
