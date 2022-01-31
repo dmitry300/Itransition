@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <title>itransition</title>
 </head>
 <body>
@@ -81,6 +83,38 @@
         </ul>
     </div>
 </aside>
+<div th:fragment="itemView" class="card-body my-3">
+    <h2 class="text-center my-2">Your Item:</h2>
+    <div class="card">
+        <h3 class="card-text" th:text="${item.getName()}"></h3>
+        <if th:if="${item.getFileName()!=null}">
+            <div class="ratio ratio-4x3">
+                <img class="card-img-top embed-responsive-item" style="object-fit: cover"
+                     th:src="@{/img/{filename}(filename = ${item.getFileName()})}">
+            </div>
+        </if>
+        <span>Some text:</span>
+        <p class="card-text" th:text="${item.getText1()}"></p>
+        <p class="card-text" th:text="${item.getText2()}"></p>
+        <p class="card-text" th:text="${item.getText3()}"></p>
+        <span>Some date:</span>
+        <p class="card-text" th:text="${#temporals.format(item.getDate1(), 'dd-MM-yyyy')}"></p>
+        <p class="card-text" th:text="${#temporals.format(item.getDate2(), 'dd-MM-yyyy')}"></p>
+        <p class="card-text" th:text="${#temporals.format(item.getDate3(), 'dd-MM-yyyy')}"></p>
+        <span>Tags:</span>
+        <div class="d-flex flex-wrap">
+            <div th:each="tag : ${item.getTag().split(' ')}">
+                <div th:text="'#' + ${tag} + ' '"></div>
+            </div>
+        </div>
+        <a class="col align-self-center" th:href="@{/{itemId}/like(itemId = ${item.getId()})}"
+           style="text-decoration: none;">
+            <i class="fas fa-heart" th:if="${item.liked}"></i>
+            <i class="far fa-heart" th:if="${not item.liked}"></i>
+            <span th:text="${item.likes}"></span>
+        </a>
+    </div>
+</div>
 <script th:fragment="script" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>

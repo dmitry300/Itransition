@@ -32,18 +32,31 @@
                             <div th:text="'#' + ${tag} + ' '"></div>
                         </div>
                     </div>
-                    <div sec:authorize="isAuthenticated()"
-                         th:if="${#strings.equals(user.getUsername(),item.getCollection().getUser().getUsername())}">
-                        <a class="btn btn-primary m-1"
-                           th:href="@{/user/profile/collection/item/edit/{itemId}(itemId = ${item.getId()})}">Edit</a>
-                        <form th:action="@{/user/profile/collection/item/remove}" method="post">
-                            <input type="hidden" name="itemId" th:value="${item.getId()}">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                            <button type="submit" class="btn btn-danger m-1">Remove</button>
-                        </form>
-                    </div>
-                    <div class="card-footer mt-2">
-                        <small class="text-muted" th:text="'author: ' + ${item.getCollection().getUser().getUsername()}"></small>
+<!--                    <div sec:authorize="isAuthenticated()"-->
+<!--                         th:if="${#strings.equals(user.getUsername(),item.getCollection().getUser().getUsername())}">-->
+<!--                        <a class="btn btn-primary m-1"-->
+<!--                           th:href="@{/user/profile/collection/item/edit/{itemId}(itemId = ${item.getId()})}">Edit</a>-->
+<!--                        <form th:action="@{/user/profile/collection/item/remove}" method="post">-->
+<!--                            <input type="hidden" name="itemId" th:value="${item.getId()}">-->
+<!--                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+<!--                            <button type="submit" class="btn btn-danger m-1">Remove</button>-->
+<!--                        </form>-->
+<!--                    </div>-->
+                    <div class="card-footer mt-2 text-muted container">
+                        <div class="row">
+                            <small class="col align-self-center"
+                                   th:text="'author: ' + ${item.getCollection().getUser().getUsername()}"></small>
+<!--                            <form th:action="@{/like}" th:method="post">-->
+<!--                                <input type="hidden" th:name="itemId" th:value="${item.getId()}"/>-->
+<!--                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+<!--                                <i type="submit" class="far fa-heart"></i>-->
+<!--                            </form>-->
+                            <a class="col align-self-center" th:href="@{/{itemId}/like(itemId = ${item.getId()})}" style="text-decoration: none;">
+                                <i class="fas fa-heart" th:if="${item.liked}"></i>
+                                <i class="far fa-heart" th:if="${not item.liked}"></i>
+                                <span th:text="${item.likes}"></span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

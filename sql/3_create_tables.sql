@@ -4,8 +4,8 @@ create table users
     activated       bit          not null,
     password        varchar(255) not null,
     activation_code varchar(255) null,
-    user_name       varchar(30) not null unique,
-    email           varchar(255) not null unique ,
+    user_name       varchar(30)  not null unique,
+    email           varchar(255) not null unique,
     constraint PK_users PRIMARY KEY (id)
 );
 
@@ -50,20 +50,35 @@ create table user_role
         foreign key (user_id) references users (id)
 );
 
-# CREATE TABLE comments
-# (
-#     id            INTEGER      NOT NULL AUTO_INCREMENT,
-#     comment       VARCHAR(180) NOT NULL,
-#     comment_data  TIMESTAMP    NOT NULL,
-#     user_id       INTEGER      NOT NULL,
-#     collection_id INTEGER      NOT NULL,
-#     CONSTRAINT PK_reviews PRIMARY KEY (id),
-#     CONSTRAINT FK_reviewBarber FOREIGN KEY (collection_id)
-#         REFERENCES collections (id)
-#         ON UPDATE CASCADE
-#         ON DELETE RESTRICT,
-#     CONSTRAINT FK_reviewUser FOREIGN KEY (user_id)
-#         REFERENCES users (id)
-#         ON UPDATE CASCADE
-#         ON DELETE RESTRICT
-# );
+create table item_likes
+(
+    item_id bigint not null,
+    user_id bigint not null,
+    primary key (item_id, user_id),
+    constraint FK_item_likesUsers foreign key (user_id)
+        references users (id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT,
+    constraint FK_item_likesItems foreign key (item_id)
+        references items (id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+);
+
+CREATE TABLE comments
+(
+    id      bigint       NOT NULL AUTO_INCREMENT,
+    text    VARCHAR(180) NOT NULL,
+    date    timestamp    NOT NULL,
+    user_id bigint       NOT NULL,
+    item_id bigint       NOT NULL,
+    CONSTRAINT PK_comments PRIMARY KEY (id),
+    CONSTRAINT FK_commentsItems FOREIGN KEY (item_id)
+        REFERENCES items (id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT,
+    CONSTRAINT FK_commentsUsers FOREIGN KEY (user_id)
+        REFERENCES users (id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+);

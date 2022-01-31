@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/fragments :: head">></head>
+<body>
+<header th:replace="/fragments :: navbar"></header>
+<div class="container-fluid pb-3 flex-grow-1 d-flex flex-column">
+    <div class="row flex-grow-sm-1 flex-grow-0">
+        <div th:replace="/fragments :: sidebar"></div>
+        <div class="col h-100" style="min-height: 80vh;">
+            <div class="bg-light border rounded-3 p-3">
+                <p>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        Add new Item
+                    </button>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">
+                        Sorting/filtering
+                    </button>
+
+                </p>
+                <div class="collapse" th:classappend="${not #strings.isEmpty(error)} ? show" id="collapseExample">
+                    <div class="card card-body">
+                        <form th:action="@{/user/profile/collection/items}" th:method="post"
+                              enctype="multipart/form-data"
+                              class="row gy-2 gx-3 align-items-center needs-validation" th:object="${item}">
+                            <div class="form-group">
+                                <label th:for="*{name}">Name</label>
+                                <input th:field="*{name}" type="text" class="form-control"
+                                       th:classappend="${not #lists.isEmpty(#fields.errors('name'))} ? is-invalid"
+                                       required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}"
+                                     th:errors="*{name}"></div>
+                            </div>
+                            <div class="form-group">
+                                <label th:for="*{tag}">Tag</label>
+                                <input th:field="*{tag}" type="text" class="form-control"
+                                       th:classappend="${not #lists.isEmpty(#fields.errors('tag'))} ? is-invalid"
+                                       required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('tag')}"
+                                     th:errors="*{tag}"></div>
+                            </div>
+                            <div class="form-group">
+                                <input type="file" name="file" placeholder="Choose file">
+                            </div>
+                            <div class="form-group">
+                                <label th:for="*{text1}">Some additional text</label>
+                                <input th:field="*{text1}" type="text" class="form-control"
+                                       th:classappend="${not #lists.isEmpty(#fields.errors('text1'))} ? is-invalid">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('text1')}"
+                                     th:errors="*{text1}"></div>
+                            </div>
+                            <div class="form-group">
+                                <label th:for="*{text2}">Some additional text</label>
+                                <input th:field="*{text2}" type="text" class="form-control"
+                                       th:classappend="${not #lists.isEmpty(#fields.errors('text2'))} ? is-invalid">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('text2')}"
+                                     th:errors="*{text2}"></div>
+                            </div>
+                            <div class="form-group">
+                                <label th:for="*{text3}">Some additional text</label>
+                                <input th:field="*{text3}" type="text" class="form-control"
+                                       th:classappend="${not #lists.isEmpty(#fields.errors('text3'))} ? is-invalid">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('text3')}"
+                                     th:errors="*{text3}"></div>
+                            </div>
+                            <div class="form-group">
+                                <label th:for="*{date1}">Some additional data</label>
+                                <input th:field="*{date1}" type="date" class="form-control"
+                                       th:classappend="${not #lists.isEmpty(#fields.errors('date1'))} ? is-invalid">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('date1')}"
+                                     th:errors="*{date1}"></div>
+                            </div>
+                            <div class="form-group">
+                                <label th:for="*{date2}">Some additional data</label>
+                                <input th:field="*{date2}" type="date" class="form-control"
+                                       th:classappend="${not #lists.isEmpty(#fields.errors('date2'))} ? is-invalid">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('date2')}"
+                                     th:errors="*{date2}"></div>
+                            </div>
+                            <div class="form-group">
+                                <label th:for="*{date3}">Some additional data</label>
+                                <input th:field="*{date3}" type="date" class="form-control"
+                                       th:classappend="${not #lists.isEmpty(#fields.errors('date3'))} ? is-invalid">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('date3')}"
+                                     th:errors="*{date3}"></div>
+                            </div>
+                            <input type="hidden" th:name="collectionId" th:value="${collectionId}">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="collapse" id="collapseExample2">
+                    <div class="card card-body">
+                        <form th:action="@{/user/profile/collection/items/{collectionId}(collectionId = ${collectionId})}" th:method="get"
+                              class="row gy-2 gx-3 align-items-center">
+                            <ul>
+                                <li><input type="radio" th:name="sortField" th:value="id">Id</li>
+                                <li><input type="radio" th:name="sortField" th:value="name">Name</li>
+                            </ul>
+                            <div class="form-group">
+                                <input type="text" th:name="filterName" placeholder="фильтер по имени">
+                            </div>
+                            <input type="hidden" th:name="sortDir" th:value="${reverseSortDir}">
+                            <input type="hidden" th:name="pageNo" th:value="${currentPage}">
+                            <input type="hidden" th:name="collectionId" th:value="${collectionId}">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Find</button>
+                            </div>
+                        </form>
+                        <!--                        <a th:href="@{/user/profile/collection/item/{collectionId}(collectionId = ${collectionId},pageNo=${currentPage},sortField='id',sortDir =${reverseSortDir})}">-->
+                        <!--                            Осортировать по id</a>-->
+                        <!--                        <a th:href="@{/user/profile/collection/item/{collectionId}(collectionId = ${collectionId},pageNo=${currentPage},sortField='name',sortDir =${reverseSortDir})}">-->
+                        <!--                            Осортировать по имени</a>-->
+                    </div>
+                </div>
+                <h2 class="text-center my-2">All your Items:</h2>
+                <div class="row row-cols-1 row-cols-md-4 g-4">
+                    <div class="col" th:each="item : ${items}">
+                        <div class="card">
+                            <h3 class="card-text" th:text="${item.getName()}"></h3>
+                            <if th:if="${item.getFileName()!=null}">
+                                <div class="ratio ratio-4x3">
+                                    <img class="card-img-top embed-responsive-item" style="object-fit: cover"
+                                         th:src="@{/img/{filename}(filename = ${item.getFileName()})}">
+                                </div>
+                            </if>
+                            <div class="card-body my-3">
+                                <span>Some text:</span>
+                                <p class="card-text" th:text="${item.getText1()}"></p>
+                                <p class="card-text" th:text="${item.getText2()}"></p>
+                                <p class="card-text" th:text="${item.getText3()}"></p>
+                                <span>Some date:</span>
+                                <p class="card-text" th:text="${#temporals.format(item.getDate1(), 'dd-MM-yyyy')}"></p>
+                                <p class="card-text" th:text="${#temporals.format(item.getDate2(), 'dd-MM-yyyy')}"></p>
+                                <p class="card-text" th:text="${#temporals.format(item.getDate3(), 'dd-MM-yyyy')}"></p>
+                                <span>Tags:</span>
+                                <div class="d-flex flex-wrap">
+                                    <div th:each="tag : ${item.getTag().split(' ')}">
+                                        <div th:text="'#' + ${tag} + ' '"></div>
+                                    </div>
+                                </div>
+                                <div class="btn-group d-flex flex-wrap" role="group" aria-label="Basic example">
+                                    <a class="btn btn-primary m-1"
+                                       th:href="@{/user/profile/item/{itemId}(itemId = ${item.getId()})}">View</a>
+                                    <a class="btn btn-primary m-1"
+                                       th:href="@{/user/profile/collection/items/edit/{itemId}(itemId = ${item.getId()})}">Edit</a>
+                                    <form th:action="@{/user/profile/collection/items/remove}" method="post">
+                                        <input type="hidden" name="itemId" th:value="${item.getId()}">
+                                        <input type="hidden" th:name="${_csrf.parameterName}"
+                                               th:value="${_csrf.token}"/>
+                                        <button type="submit" class="btn btn-danger m-1">Remove</button>
+                                    </form>
+                                </div>
+                                <a class="col align-self-center" th:href="@{/{itemId}/like(itemId = ${item.getId()})}" style="text-decoration: none;">
+                                    <i class="fas fa-heart" th:if="${item.liked}"></i>
+                                    <i class="far fa-heart" th:if="${not item.liked}"></i>
+                                    <span th:text="${item.likes}"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${not #lists.isEmpty(items)} and ${page.getTotalElements()} > 4">
+                    <nav aria-label="Page navigation example" class="mt-4">
+                        <ul class="pagination justify-content-center ">
+                            <li class="page-item" th:if="${page.hasPrevious()}">
+                                <a class="page-link"
+                                   th:href="@{/user/profile/collection/items/{collectionId}(collectionId = ${collectionId},pageNo=${page.number - 1},sortField=${sortField},sortDir=${sortDir},filterName=${filter})}">Previous</a>
+                            </li>
+                            <th:block th:each="i: ${#numbers.sequence(0, page.totalPages - 1)}">
+                                <li class="page-item active" aria-current="page">
+                                    <a class="page-link"
+                                       th:href="@{/user/profile/collection/items/{collectionId}(collectionId = ${collectionId},pageNo=${i},sortField=${sortField},sortDir=${sortDir},filterName=${filter})}">[[${i}+1]]</a>
+                                </li>
+                            </th:block>
+                            <li class="page-item" th:if="${page.hasNext()}">
+                                <a class="page-link"
+                                   th:href="@{/user/profile/collection/items/{collectionId}(collectionId = ${collectionId},pageNo=${page.number+1},sortField=${sortField},sortDir=${sortDir},filterName=${filter})}">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:replace="/fragments :: script"></script>
+</body>
+</html>
